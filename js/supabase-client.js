@@ -278,36 +278,67 @@
     const nav = document.getElementById('navbar');
     if (!nav) return;
     const links = [
-      { href: 'index.html',          label: 'Home',          key: 'home' },
-      { href: 'bots.html',           label: 'All Bots',      key: 'bots' },
-      { href: 'category.html?cat=forex',       label: 'Forex',      key: 'forex' },
-      { href: 'category.html?cat=binary',      label: 'Binary',     key: 'binary' },
-      { href: 'category.html?cat=crypto',      label: 'Crypto',     key: 'crypto' },
-      { href: 'category.html?cat=tradingview', label: 'TradingView',key: 'tradingview' },
-      { href: 'category.html?cat=ai',          label: 'AI Trading', key: 'ai' },
-      { href: 'about.html',          label: 'About',         key: 'about' },
-      { href: 'contact.html',        label: 'Contact',       key: 'contact' }
+      { href: 'index.html',                label: 'Home',          key: 'home',          icon: '🏠' },
+      { href: 'bots.html',                 label: 'All Bots',      key: 'bots',          icon: '🗂️' },
+      { href: 'category.html?cat=forex',   label: 'Forex',         key: 'forex',         icon: '💱' },
+      { href: 'category.html?cat=binary',  label: 'Binary',        key: 'binary',        icon: '⚙️' },
+      { href: 'category.html?cat=crypto',  label: 'Crypto',        key: 'crypto',        icon: '₿'  },
+      { href: 'category.html?cat=tradingview', label: 'TradingView', key: 'tradingview', icon: '📈' },
+      { href: 'category.html?cat=ai',      label: 'AI Trading',    key: 'ai',            icon: '🤖' },
+      { href: 'about.html',                label: 'About',         key: 'about',         icon: 'ℹ️' },
+      { href: 'contact.html',              label: 'Contact',       key: 'contact',       icon: '✉️' }
     ];
     nav.innerHTML = `
-      <nav class="navbar">
+      <nav class="navbar" id="navbarEl">
         <div class="nav-container">
-          <a class="brand" href="index.html">
+          <a class="brand" href="index.html" aria-label="FreeBotHub home">
             <span class="logo-mark">F</span>
             <span class="brand-text">
               <span class="brand-name">FreeBotHub</span>
-              <span class="brand-tag">Free Trading Bots Directory</span>
+              <span class="brand-tag">Free Trading Bots</span>
             </span>
           </a>
           <div class="search-wrap">
-            <input id="navSearch" type="search" placeholder="Search bots by name..." aria-label="Search bots">
+            <input id="navSearch" type="search" placeholder="Search bots by name…" aria-label="Search bots">
           </div>
-          <button class="nav-toggle" aria-label="Menu" onclick="document.getElementById('navLinks').classList.toggle('open')">&#9776;</button>
+          <button class="nav-search-btn" id="navSearchBtn" aria-label="Open search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <button class="nav-toggle" id="navToggle" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
           <ul class="nav-links" id="navLinks">
             ${links.map(l => `<li><a href="${l.href}" class="${active === l.key ? 'active' : ''}">${l.label}</a></li>`).join('')}
           </ul>
         </div>
       </nav>
+
+      <div class="nav-overlay" id="navOverlay"></div>
+      <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+        <div class="nav-drawer-head">
+          <h3>Menu</h3>
+          <button class="nav-drawer-close" id="navDrawerClose" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="nav-drawer-search">
+          <input id="navDrawerSearch" type="search" placeholder="Search bots by name…">
+        </div>
+        <ul class="nav-drawer-links">
+          ${links.map(l => `<li><a href="${l.href}" class="${active === l.key ? 'active' : ''}"><span class="icon">${l.icon}</span><span>${l.label}</span></a></li>`).join('')}
+        </ul>
+        <div class="nav-drawer-foot">
+          <a class="broker-link quotex" href="${cfg.quotexLink || '#'}" target="_blank" rel="noopener noreferrer">📊 Open Quotex</a>
+          <a class="broker-link exness" href="${cfg.exnessLink || '#'}" target="_blank" rel="noopener noreferrer">📈 Open Exness</a>
+        </div>
+      </aside>
+
+      <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </button>
     `;
+
+    /* Wire up: search submit (desktop) */
     const si = document.getElementById('navSearch');
     if (si) {
       si.addEventListener('keydown', e => {
@@ -316,6 +347,65 @@
         }
       });
     }
+
+    /* Wire up: mobile search button — toggles the search bar */
+    const searchBtn = document.getElementById('navSearchBtn');
+    const searchWrap = document.querySelector('.search-wrap');
+    if (searchBtn && searchWrap) {
+      searchBtn.addEventListener('click', () => {
+        searchWrap.classList.toggle('show-mobile');
+        if (searchWrap.classList.contains('show-mobile')) {
+          const inp = searchWrap.querySelector('input');
+          if (inp) setTimeout(() => inp.focus(), 50);
+        }
+      });
+    }
+
+    /* Wire up: mobile search submit */
+    const mobileSearch = document.getElementById('navDrawerSearch');
+    if (mobileSearch) {
+      mobileSearch.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && mobileSearch.value.trim()) {
+          window.location.href = 'bots.html?q=' + encodeURIComponent(mobileSearch.value.trim());
+        }
+      });
+    }
+
+    /* Wire up: nav drawer (open / close) */
+    const toggle = document.getElementById('navToggle');
+    const drawer = document.getElementById('navDrawer');
+    const overlay = document.getElementById('navOverlay');
+    const closeBtn = document.getElementById('navDrawerClose');
+    const openDrawer = () => {
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeDrawer = () => {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    if (toggle) toggle.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (overlay) overlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+    });
+
+    /* Wire up: scroll-aware navbar */
+    const navEl = document.getElementById('navbarEl');
+    const backToTop = document.getElementById('backToTop');
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (navEl) navEl.classList.toggle('scrolled', y > 20);
+      if (backToTop) backToTop.classList.toggle('show', y > 400);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
   /* ---------- Footer ---------- */
