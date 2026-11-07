@@ -1560,7 +1560,10 @@ main { flex: 1 0 auto; }
 @media (max-width: 980px) {
   .nav-links { display: none; }
   .nav-toggle { display: flex; }
-  .nav-search-btn { display: flex; }
+  /* v3.3: the header is plain flex-start, so brand + buttons packed on the
+     left and left a dead ~25% gap at the right edge. Push the buttons flush
+     right instead. */
+  .nav-search-btn { display: flex; margin-left: auto; }
   .search-wrap {
     display: none;
     position: absolute;
@@ -1757,3 +1760,6 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
   }
   .admin-table .btn-sm { padding: 6px 10px; min-height: 36px; }
 }
+
+/* v3.3 (2026-11-07): mobile header — search + menu buttons sit flush at the
+   right edge instead of floating mid-header with dead space after them. */

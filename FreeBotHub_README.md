@@ -203,3 +203,11 @@ Also check `https://freebothub.com` loads over HTTPS on your phone — Muse's br
 - Admin All Bots table fits without horizontal scrolling on phones: the Image,
   Platform, Featured and Created columns hide under 900px (Name, Category,
   Status and Actions stay), with tighter padding.
+
+## v3.3 mobile header fix (2026-11-07)
+
+- The header row is a plain left-packed flex row, so on phones the brand,
+  search and menu buttons only filled about three quarters of the width and
+  left a dead gap at the right edge (the hamburger looked like it was floating
+  in the middle). The search button now gets `margin-left: auto` under 980px,
+  so the buttons sit flush against the right edge.
