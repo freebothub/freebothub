@@ -297,10 +297,17 @@
       name, category, platform, short_description,
       full_description, features, installation_info,
       image_url: imageUrl, destination_url,
-      license_key: license_key || null,
       is_featured, status,
       updated_at: new Date().toISOString()
     };
+    // v3.4.1 fix: only send license_key when setting one, or when clearing
+    // one that was already saved. Sending it unconditionally broke EVERY
+    // save on databases that predate v3.4, because the column does not
+    // exist there yet — even when the key field was left empty.
+    const existingBot = id ? allBotsCache.find(x => x.id === id) : null;
+    if (license_key || (existingBot && existingBot.license_key)) {
+      payload.license_key = license_key || null;
+    }
     // If the live database predates v3.4, the license_key column does not
     // exist yet — Supabase rejects the save. Tell the admin the exact fix
     // instead of a bare error.
