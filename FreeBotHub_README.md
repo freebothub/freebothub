@@ -1,0 +1,164 @@
+# FreeBotHub.com
+
+A complete, free directory of trading bots and trading tools — Forex, Binary Options, Crypto, TradingView, AI Trading, Trading Signals, MT4 / MT5 Expert Advisors and more.
+
+Built with **vanilla HTML / CSS / JavaScript** + **Supabase** (PostgreSQL, Auth, Storage). Designed to host on **GitHub Pages** with a custom domain — no paid hosting required.
+
+---
+
+## ✨ Features
+
+- Modern dark trading-marketplace theme (navy / white / green)
+- 9 categories: Forex, Binary, Crypto, TradingView, AI Trading, Signals, MT4, MT5, Other Tools
+- Public homepage with hero, search, category cards, featured / latest / popular bot grids
+- All-bots page with live search, category + platform filters, sorting and pagination
+- Per-category pages with their own filters
+- Individual bot detail pages with image, full description, features, installation info and risk warning
+- **"Get Bot"** button on every bot page — opens the bot's external link in a new tab
+- Floating **Quotex** and **Exness** broker buttons on every page
+- Optional **background redirect**: when a visitor clicks "Get Bot", the current page also redirects to the configured affiliate link (Quotex by default). Disable in `js/config.js`.
+- Secure admin dashboard (Supabase Auth + RLS) with full CRUD for bots, image upload, publish/unpublish, mark as featured, delete
+- Auto-display of newly published bots; edited bots update automatically; drafts are hidden from public visitors
+- Graceful handling of missing images, broken links and empty states
+- SEO-friendly meta tags, sitemap.xml, robots.txt
+- Fully responsive (mobile / tablet / desktop)
+
+---
+
+## 📦 Project Structure
+
+```
+FreeBotHub/
+├── index.html              Home page
+├── bots.html               All bots (search + filter + pagination)
+├── category.html           Single category page (?cat=forex)
+├── bot.html                Single bot detail page (?slug=...)
+├── about.html              About Us
+├── contact.html            Contact form (mailto)
+├── privacy.html            Privacy Policy
+├── terms.html              Terms & Conditions
+├── disclaimer.html         Trading Risk Disclaimer
+├── admin-login.html        Supabase Auth login
+├── admin-dashboard.html    Admin CRUD UI
+├── 404.html                Not found
+├── robots.txt
+├── sitemap.xml
+├── .nojekyll               Keeps GitHub Pages from ignoring _-prefixed folders
+├── css/
+│   └── style.css           Full theme
+├── js/
+│   ├── config.js           ← EDIT THIS: your Supabase URL + anon key
+│   ├── supabase-client.js  Shared client, helpers, broker buttons, background redirect
+│   ├── home.js             Homepage rendering
+│   ├── bots.js             All bots page
+│   ├── category.js         Category page
+│   ├── bot-detail.js       Bot detail page + Get Bot handler
+│   ├── admin-auth.js       Login + admin guard
+│   └── admin-dashboard.js  Admin CRUD UI logic
+├── sql/
+│   └── setup.sql           ← Run once in Supabase SQL Editor
+└── assets/
+    ├── logo.svg
+    └── favicon.svg
+```
+
+---
+
+## 🚀 Quick Start (5 minutes)
+
+1. **Download / clone** this folder.
+2. **Create a Supabase project** (free plan) → https://supabase.com
+3. **Run the SQL setup**:
+   - Open Supabase Dashboard → SQL Editor → New query
+   - Paste the contents of `sql/setup.sql`
+   - **Edit the line** `INSERT INTO public.admins (email) VALUES ('your-admin-email@example.com')` to use your real email
+   - Click **Run**
+4. **Get your Supabase keys**:
+   - Dashboard → Project Settings → API
+   - Copy **Project URL** and **anon public** key
+5. **Edit `js/config.js`** and replace:
+   ```js
+   supabaseUrl:    'https://YOUR-PROJECT-REF.supabase.co',
+   supabaseAnonKey:'YOUR_ANON_PUBLIC_KEY_HERE',
+   ```
+   with your real values.
+6. **Create your admin user**:
+   - Dashboard → Authentication → Users → Add user
+   - Enter the same email you used in step 3, set a password, and confirm
+7. **Upload to GitHub** and **enable GitHub Pages** (see the PDF guide for screenshots).
+
+Open the site → click **Admin Login** → sign in → add your first bot.
+
+---
+
+## 🔧 Configuration
+
+All editable settings live in **`js/config.js`**:
+
+| Setting | Purpose |
+|---|---|
+| `supabaseUrl` | Your Supabase project URL |
+| `supabaseAnonKey` | Supabase anon/publishable key (safe to publish) |
+| `storageBucket` | Storage bucket name (default `bot-images`) |
+| `siteName` / `siteUrl` / `contactEmail` | Identity used in footer, contact form, meta tags |
+| `quotexLink` | Quotex affiliate URL (floating button + default redirect target) |
+| `exnessLink` | Exness affiliate URL (floating button) |
+| `backgroundRedirect` | `true` = when "Get Bot" is clicked, current page redirects to affiliate link after opening bot link in new tab. `false` = no background redirect. |
+| `backgroundRedirectTarget` | `'quotex'`, `'exness'`, or any `https://...` URL |
+
+---
+
+## 🔐 Security Notes
+
+- **The anon key is safe to expose** — that is its design purpose. It is gated by Row Level Security in your Supabase project.
+- **NEVER** put the Supabase **service-role** key in any frontend file. It is not needed for this project.
+- **RLS** is enforced for every table:
+  - Public visitors can only `SELECT` published bots.
+  - Only users whose email is in the `admins` table can `INSERT`, `UPDATE`, `DELETE`.
+  - Storage follows the same rules for the `bot-images` bucket.
+- Admin login uses Supabase Auth (email + password). Sessions persist via local storage.
+
+---
+
+## ☁️ Deploy to GitHub Pages
+
+1. Create a new GitHub repository (e.g. `freebothub`).
+2. Upload every file from this folder to the repository root.
+3. Repository → **Settings** → **Pages** → Source: **Deploy from a branch** → Branch: **main** / root → **Save**.
+4. Wait ~1 minute. Your site is live at `https://<your-username>.github.io/freebothub/`.
+
+### Custom domain (FreeBotHub.com)
+
+1. Buy the domain at any registrar.
+2. GitHub repo → Settings → Pages → Custom domain → enter `freebothub.com` → **Save**.
+3. At your registrar, add DNS records:
+   - **A records**: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+   - **CNAME**: `www` → `<your-username>.github.io`
+4. Wait for DNS propagation (5 min – 24 h). Tick **Enforce HTTPS** in GitHub Pages settings.
+
+---
+
+## 🛟 Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| Site shows "Supabase is not configured" banner | Edit `js/config.js` with real URL + anon key |
+| Admin login says "not authorized" | Run `sql/setup.sql` and confirm your email is in the `admins` table |
+| Image upload fails | Confirm `bot-images` bucket exists and is public (re-run the storage section of `sql/setup.sql`) |
+| Bots don't appear on homepage | In admin dashboard, set bot Status = **Published** and click Save |
+| 404 on `/admin-dashboard.html` | Make sure `.nojekyll` is uploaded (without it GitHub Pages may skip files) |
+| Background redirect does not fire | Some browsers block background navigation after popup. Set `backgroundRedirect: false` to disable, or accept that ad-blockers may suppress it. |
+
+For full step-by-step instructions with diagrams, see **`FreeBotHub_Setup_Guide.pdf`**.
+
+---
+
+## 📜 License & Disclaimer
+
+Source code is provided as-is for your own use. The FreeBotHub name, logo and brand are yours to keep for your own deployment.
+
+**Trading in financial markets carries substantial risk.** Bots listed on this site do not guarantee profits. Always test on demo accounts before risking real capital. See `disclaimer.html` for the full risk warning.
+
+---
+
+Made for traders, by traders. 🚀

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreeBotHub.com — Free Trading Bots & Tools Directory</title>
+<meta name="description" content="Free directory of trading bots, Expert Advisors, indicators and signals. Forex, Binary, Crypto, TradingView, AI Trading, MT4, MT5 and more — all free.">
+<meta name="keywords" content="free trading bots, forex bots, binary options bots, crypto trading bots, MT4 EA, MT5 EA, TradingView indicators, AI trading bots, trading signals">
+<meta property="og:title" content="FreeBotHub.com — Free Trading Bots Directory">
+<meta property="og:description" content="Browse, search and access hundreds of free trading bots and tools.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script>window.FBH_PAGE_NAV = 'home';</script>
+</head>
+<body>
+<div id="navbar"></div>
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1>Free Trading Bots &amp; Tools <span class="hl">All In One Place</span></h1>
+      <p>Browse hundreds of free Forex, Binary, Crypto, TradingView, AI, MT4, MT5 and signal bots. No subscription, no paywalls — every listing is free.</p>
+      <div class="hero-cta">
+        <a href="bots.html" class="btn btn-primary btn-lg">Browse All Bots</a>
+        <a href="category.html?cat=forex" class="btn btn-outline btn-lg">Explore Categories</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num" id="statTotal">—</div><div class="label">Total Bots</div></div>
+        <div class="hero-stat"><div class="num" id="statCats">9</div><div class="label">Categories</div></div>
+        <div class="hero-stat"><div class="num" id="statFree">100%</div><div class="label">Free Forever</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Browse Categories</h2>
+        <a class="view-all" href="bots.html">View all →</a>
+      </div>
+      <div class="cat-grid" id="catGrid">
+        <div class="loader"><div class="spinner"></div>Loading categories…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED -->
+  <section class="section" style="background: var(--bg-dark); border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+    <div class="container">
+      <div class="section-head">
+        <h2>Featured Trading Bots</h2>
+        <a class="view-all" href="bots.html">View all →</a>
+      </div>
+      <div class="bot-grid" id="featuredGrid"><div class="loader"><div class="spinner"></div>Loading featured bots…</div></div>
+    </div>
+  </section>
+
+  <!-- LATEST -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Latest Uploaded Bots</h2>
+        <a class="view-all" href="bots.html">View all →</a>
+      </div>
+      <div class="bot-grid" id="latestGrid"><div class="loader"><div class="spinner"></div>Loading latest bots…</div></div>
+    </div>
+  </section>
+
+  <!-- POPULAR (sample) -->
+  <section class="section" style="background: var(--bg-dark); border-top:1px solid var(--border)">
+    <div class="container">
+      <div class="section-head">
+        <h2>Popular This Week</h2>
+        <a class="view-all" href="bots.html">View all →</a>
+      </div>
+      <div class="bot-grid" id="popularGrid"><div class="loader"><div class="spinner"></div>Loading popular bots…</div></div>
+    </div>
+  </section>
+
+  <!-- DISCLAIMER -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="risk-warning" style="margin:0">
+        <h3>⚠️ Trading Risk Warning</h3>
+        <p>Trading foreign exchange, binary options, cryptocurrencies and other leveraged products carries a high level of risk and may not be suitable for all investors. You could lose some or all of your invested capital. The bots and tools listed on FreeBotHub are provided for informational purposes only and do not constitute financial advice. <strong>No bot guarantees profits.</strong> Always test on demo accounts and seek independent advice before trading with real funds.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+<div id="footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

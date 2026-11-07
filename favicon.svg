@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="64" height="64" rx="12" fill="url(#g)"/>
+  <path d="M16 40 L26 28 L34 36 L48 18" fill="none" stroke="#0a0f1c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="48" cy="18" r="4" fill="#0a0f1c"/>
+  <text x="14" y="54" font-family="Arial, sans-serif" font-size="14" font-weight="900" fill="#0a0f1c">FH</text>
+</svg>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — FreeBotHub.com</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script>window.FBH_PAGE_NAV = null;</script>
+</head>
+<body>
+<div id="navbar"></div>
+<main>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <h4>Manage</h4>
+      <a href="#" class="nav-item active" data-view="overview">📊 Overview</a>
+      <a href="#" class="nav-item" data-view="bots">🗂️ All Bots</a>
+      <a href="#" class="nav-item" data-view="add">➕ Add New Bot</a>
+      <a href="#" class="nav-item" data-view="categories">🏷️ Categories</a>
+      <h4>Account</h4>
+      <a href="#" id="logoutBtn">🚪 Logout</a>
+      <a href="index.html" target="_blank">🌐 View Site</a>
+    </aside>
+
+    <!-- Main content -->
+    <section class="admin-main">
+
+      <!-- Config warning -->
+      <div id="configWarning" class="auth-error show" style="margin-bottom:18px;background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.35);color:#fcd34d">
+        ⚠️ Supabase is not configured yet. Open <code>js/config.js</code> and fill in your project URL and anon key. See the Setup Guide PDF for details.
+      </div>
+
+      <div id="adminEmail" style="float:right;font-size:13px;color:var(--text-muted)"></div>
+
+      <!-- OVERVIEW -->
+      <div class="view-pane" id="view-overview">
+        <h2 style="margin-bottom:18px">Overview</h2>
+        <div class="admin-stat-grid" id="statGrid">
+          <div class="admin-stat"><div class="label">Total Bots</div><div class="value" id="s-total">—</div></div>
+          <div class="admin-stat"><div class="label">Published</div><div class="value" id="s-pub">—</div></div>
+          <div class="admin-stat"><div class="label">Drafts</div><div class="value" id="s-draft">—</div></div>
+          <div class="admin-stat"><div class="label">Featured</div><div class="value" id="s-feat">—</div></div>
+        </div>
+        <div class="admin-form" style="max-width:none">
+          <h3 style="margin-bottom:12px;color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:.06em">Quick Actions</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" data-jump="add">➕ Add New Bot</button>
+            <button class="btn btn-outline" data-jump="bots">🗂️ Manage Existing</button>
+            <a class="btn btn-outline" href="index.html" target="_blank">🌐 View Live Site</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALL BOTS -->
+      <div class="view-pane" id="view-bots" style="display:none">
+        <div class="section-head" style="margin-bottom:14px">
+          <h2 style="font-size:20px">All Bots</h2>
+          <button class="btn btn-primary btn-sm" data-jump="add">➕ Add New</button>
+        </div>
+        <input id="adminBotSearch" class="grow" type="search" placeholder="Filter by name…" style="width:100%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:9px 14px;border-radius:var(--radius-sm);margin-bottom:14px">
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th><th>Name</th><th>Category</th><th>Platform</th>
+                <th>Status</th><th>Featured</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="botsTableBody">
+              <tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADD / EDIT -->
+      <div class="view-pane" id="view-add" style="display:none">
+        <div class="section-head" style="margin-bottom:14px">
+          <h2 id="formTitle" style="font-size:20px">Add New Bot</h2>
+          <button class="btn btn-outline btn-sm" data-jump="bots">← Back to list</button>
+        </div>
+        <form class="admin-form" id="botForm">
+          <input type="hidden" id="botId">
+          <div class="field">
+            <label>Bot Name <span class="req">*</span></label>
+            <input id="f_name" type="text" required placeholder="e.g. Forex Trend Pro EA">
+            <div class="help">The slug (URL) is auto-generated from the name.</div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Category <span class="req">*</span></label>
+              <select id="f_category" required></select>
+            </div>
+            <div class="field">
+              <label>Trading Platform <span class="req">*</span></label>
+              <select id="f_platform" required></select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Short Description <span class="req">*</span></label>
+            <input id="f_short" type="text" maxlength="200" required placeholder="One-line summary shown on the card (max 200 chars)">
+          </div>
+          <div class="field">
+            <label>Full Description</label>
+            <textarea id="f_full" rows="6" placeholder="Detailed multi-paragraph description of the bot…"></textarea>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Features (one per line)</label>
+              <textarea id="f_features" rows="6" placeholder="Auto lot sizing&#10;Trailing stop&#10;News filter"></textarea>
+            </div>
+            <div class="field">
+              <label>Installation Info (one step per line)</label>
+              <textarea id="f_install" rows="6" placeholder="1. Download the file.&#10;2. Copy into MQL4/Experts.&#10;3. Restart MT4 and attach."></textarea>
+            </div>
+          </div>
+          <div class="field">
+            <label>Bot Image</label>
+            <input id="f_image" type="file" accept="image/*">
+            <div class="help">PNG, JPG or WEBP. Recommended 1280×720. Stored in Supabase Storage bucket "bot-images".</div>
+            <div class="image-preview" id="imagePreview" style="display:none"><img id="previewImg" alt="preview"></div>
+            <input type="hidden" id="f_image_url">
+          </div>
+          <div class="field">
+            <label>External Destination URL (Get Bot link) <span class="req">*</span></label>
+            <input id="f_url" type="url" required placeholder="https://example.com/your-bot-download-or-landing-page">
+            <div class="help">When a visitor clicks "Get Bot", this URL opens in a new tab and the current page redirects to the configured affiliate link.</div>
+          </div>
+          <div class="row-2">
+            <div class="field checkbox-field">
+              <input id="f_featured" type="checkbox">
+              <label for="f_featured">Mark as Featured</label>
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select id="f_status">
+                <option value="published">Published (visible on site)</option>
+                <option value="draft">Draft (hidden from site)</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <button type="submit" class="btn btn-primary" id="saveBtn">💾 Save Bot</button>
+            <button type="button" class="btn btn-outline" id="cancelBtn">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="view-pane" id="view-categories" style="display:none">
+        <h2 style="margin-bottom:14px;font-size:20px">Categories Overview</h2>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:18px">Categories are predefined in the website code. Below is a live count of bots per category.</p>
+        <table class="admin-table">
+          <thead><tr><th>Category</th><th>Published</th><th>Drafts</th><th>Total</th></tr></thead>
+          <tbody id="catTableBody">
+            <tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-muted)">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+  </div>
+</main>
+<div id="footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin-dashboard.js"></script>
+</body>
+</html>

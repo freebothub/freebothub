@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Category — FreeBotHub.com</title>
+<meta name="description" id="pageDesc" content="Browse trading bots in this category.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script>window.FBH_PAGE_NAV = 'category';</script>
+</head>
+<body>
+<div id="navbar"></div>
+<main>
+  <div class="page-header">
+    <div class="container">
+      <h1 id="catTitle">Category</h1>
+      <p id="catSubtitle">Browse bots in this category.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="index.html">Home</a><span class="sep">/</span>
+      <a href="bots.html">All Bots</a><span class="sep">/</span>
+      <span id="crumbCat">Category</span>
+    </nav>
+
+    <div class="filter-bar">
+      <input class="grow" id="searchInput" type="search" placeholder="Search within category…">
+      <label>Platform
+        <select id="platFilter"><option value="">All platforms</option></select>
+      </label>
+      <label>Sort
+        <select id="sortFilter">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="name">Name A→Z</option>
+        </select>
+      </label>
+      <button class="btn btn-outline btn-sm" id="clearBtn">Clear</button>
+    </div>
+
+    <div class="bot-grid" id="botGrid">
+      <div class="loader"><div class="spinner"></div>Loading bots…</div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+</main>
+<div id="footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/category.js"></script>
+</body>
+</html>

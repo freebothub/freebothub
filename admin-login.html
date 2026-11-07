@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — FreeBotHub.com</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script>window.FBH_PAGE_NAV = null;</script>
+</head>
+<body>
+<div id="navbar"></div>
+<main>
+  <div class="auth-wrap">
+    <h1>Admin Login</h1>
+    <p class="sub">Sign in to manage the FreeBotHub directory.</p>
+    <div class="auth-error" id="authError"></div>
+    <form class="auth-form" id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="username" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign In</button>
+    </form>
+    <p style="text-align:center;color:var(--text-muted);font-size:12px;margin-top:18px">
+      Authorized administrators only. If you do not have credentials, please contact the site owner.
+    </p>
+    <p style="text-align:center;margin-top:10px"><a href="index.html" style="color:var(--text-muted);font-size:13px">← Back to website</a></p>
+  </div>
+</main>
+<div id="footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/admin-auth.js"></script>
+<script>
+(function(){
+  // Redirect to dashboard if already logged in.
+  document.addEventListener('DOMContentLoaded', async function(){
+    if (!window.fbh || !window.fbh.ready) return;
+    const { data } = await window.fbh.supabase.auth.getSession();
+    if (data && data.session) {
+      // Verify admin status
+      const u = data.session.user;
+      const { data: adminRec } = await window.fbh.supabase
+        .from('admins').select('email').eq('email', u.email).maybeSingle();
+      if (adminRec) window.location.href = 'admin-dashboard.html';
+    }
+  });
+})();
+</script>
+</body>
+</html>

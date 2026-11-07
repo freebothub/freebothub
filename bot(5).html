@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Bot Details — FreeBotHub.com</title>
+<meta name="description" id="pageDesc" content="Free trading bot details and download link.">
+<meta property="og:type" content="article">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script>window.FBH_PAGE_NAV = 'bot';</script>
+</head>
+<body>
+<div id="navbar"></div>
+<main>
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="index.html">Home</a><span class="sep">/</span>
+      <a href="bots.html">All Bots</a><span class="sep">/</span>
+      <a id="crumbCat" href="#">Category</a><span class="sep">/</span>
+      <span id="crumbBot">Bot</span>
+    </nav>
+
+    <div id="detailRoot">
+      <div class="loader"><div class="spinner"></div>Loading bot details…</div>
+    </div>
+  </div>
+</main>
+<div id="footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/bot-detail.js"></script>
+</body>
+</html>
