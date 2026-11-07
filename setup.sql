@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS public.bots (
   installation_info   text,
   image_url           text,
   destination_url     text NOT NULL,
+  license_key         text, -- optional: shown as a scratch-to-reveal card on the bot page
   is_featured         boolean NOT NULL DEFAULT false,
   status              text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','published')),
   created_at          timestamptz NOT NULL DEFAULT now(),
@@ -289,3 +290,11 @@ ON CONFLICT (slug) DO NOTHING;
 -- ==========================================================================
 -- DONE. Read the FreeBotHub_Setup_Guide.pdf for what to do next.
 -- ==========================================================================
+
+-- ---------------------------------------------------------------------------
+-- Migration for databases created before v3.4 (run once in Supabase SQL Editor):
+--   ALTER TABLE public.bots ADD COLUMN IF NOT EXISTS license_key text;
+-- The site and admin panel read/write this column; until it exists, bots
+-- simply show no license card and admin saves that include a key will fail
+-- with a clear message telling the admin to run the line above.
+-- ---------------------------------------------------------------------------

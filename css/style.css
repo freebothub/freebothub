@@ -1763,3 +1763,53 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
 
 /* v3.3 (2026-11-07): mobile header — search + menu buttons sit flush at the
    right edge instead of floating mid-header with dead space after them. */
+
+/* ==========================================================================
+   v3.4 — License key scratch card (bot detail page)
+   The visitor scratches the silver panel to reveal the key, then copies it.
+   ========================================================================== */
+.license-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  margin: var(--sp-5) 0;
+}
+.license-card h3 { font-size: var(--fs-md); margin-bottom: 6px; }
+.scratch-wrap {
+  position: relative;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  background: var(--bg-dark);
+  min-height: 64px;
+}
+.scratch-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-align: center;
+  word-break: break-all;
+  user-select: all;
+  -webkit-user-select: all;
+}
+.scratch-cover {
+  position: absolute;
+  inset: 0;
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+}
+.scratch-hint {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 10px 0 12px;
+}
+#copyKeyBtn:disabled { opacity: 0.45; cursor: not-allowed; }

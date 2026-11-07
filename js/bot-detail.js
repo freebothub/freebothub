@@ -48,6 +48,19 @@
          </section>`
       : '';
 
+    const licenseHTML = bot.license_key
+      ? `<section class="license-card" id="licenseCard">
+           <h3>🗝️ License Key / Password</h3>
+           <p style="color:var(--text-secondary);font-size:14px;margin:0 0 12px">Scratch the panel below to reveal this bot's license key, then copy it.</p>
+           <div class="scratch-wrap" id="scratchWrap">
+             <div class="scratch-key" id="scratchKey">${fbh.escapeHtml(bot.license_key)}</div>
+             <canvas class="scratch-cover" id="scratchCanvas"></canvas>
+           </div>
+           <p class="scratch-hint" id="scratchHint">👆 Scratch here to reveal the key</p>
+           <button class="btn btn-primary" id="copyKeyBtn" type="button" disabled>📋 Copy License Key</button>
+         </section>`
+      : '';
+
     const installHTML = bot.installation_info
       ? `<section class="bot-detail-section">
            <h3>🔧 Installation / Setup</h3>
@@ -94,6 +107,8 @@
             <a class="btn btn-outline btn-lg" href="category.html?cat=${encodeURIComponent(bot.category)}">More ${fbh.escapeHtml(fbh.categoryName(bot.category))} bots →</a>
           </div>
 
+          ${licenseHTML}
+
           <p style="color:var(--text-muted);font-size:12px;margin-top:14px">
             By clicking <strong>Get This Bot</strong>, the bot's external page opens in a new tab and you will be redirected to our partner broker. You can return to FreeBotHub any time.
           </p>
@@ -105,6 +120,89 @@
     btn.addEventListener('click', function () {
       fbh.openBotLink(bot.destination_url, { source: 'detail' });
     });
+    // v3.4 — scratch-to-reveal license key card
+    const licenseCard = document.getElementById('licenseCard');
+    if (licenseCard && bot.license_key) {
+      const keyText = bot.license_key;
+      const wrap = document.getElementById('scratchWrap');
+      const canvas = document.getElementById('scratchCanvas');
+      const copyKeyBtn = document.getElementById('copyKeyBtn');
+      const hint = document.getElementById('scratchHint');
+      const ctx = canvas.getContext('2d');
+      let revealed = false;
+      let drawing = false;
+      function sizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        canvas.width = Math.max(1, w * dpr); canvas.height = Math.max(1, h * dpr);
+        canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function paintCover() {
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        const g = ctx.createLinearGradient(0, 0, w, h);
+        g.addColorStop(0, '#c8cfd8'); g.addColorStop(0.5, '#9aa3af'); g.addColorStop(1, '#c8cfd8');
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.font = '700 15px Inter, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('👆 SCRATCH TO REVEAL', w / 2, h / 2);
+      }
+      function scratchAt(clientX, clientY) {
+        const r = canvas.getBoundingClientRect();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(clientX - r.left, clientY - r.top, 22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      function scratchedPct() {
+        try {
+          const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+          let clear = 0, total = 0;
+          for (let i = 3; i < data.length; i += 40) { total++; if (data[i] < 128) clear++; }
+          return total ? clear / total : 0;
+        } catch (e) { return 1; }
+      }
+      function finishReveal() {
+        if (revealed) return; revealed = true;
+        canvas.style.transition = 'opacity .4s'; canvas.style.opacity = '0';
+        setTimeout(function () { canvas.style.display = 'none'; }, 420);
+        if (hint) hint.textContent = '✅ Key revealed — tap Copy to save it.';
+        copyKeyBtn.disabled = false;
+      }
+      sizeCanvas(); paintCover();
+      canvas.addEventListener('pointerdown', function (e) {
+        drawing = true;
+        try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+        scratchAt(e.clientX, e.clientY);
+      });
+      canvas.addEventListener('pointermove', function (e) {
+        if (!drawing || revealed) return;
+        scratchAt(e.clientX, e.clientY);
+        if (scratchedPct() > 0.45) finishReveal();
+      });
+      ['pointerup', 'pointercancel'].forEach(function (ev) {
+        canvas.addEventListener(ev, function () {
+          drawing = false;
+          if (!revealed && scratchedPct() > 0.45) finishReveal();
+        });
+      });
+      window.addEventListener('resize', function () { if (!revealed) { sizeCanvas(); paintCover(); } });
+      copyKeyBtn.addEventListener('click', async function () {
+        try {
+          await navigator.clipboard.writeText(keyText);
+          fbh.toast('License key copied', 'success');
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = keyText; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); fbh.toast('License key copied', 'success'); }
+          catch (e2) { fbh.toast('Copy failed — long-press the key to copy it', 'error'); }
+          document.body.removeChild(ta);
+        }
+      });
+    }
     const copyBtn = document.getElementById('copyLinkBtn');
     if (copyBtn) copyBtn.addEventListener('click', async function () {
       try {

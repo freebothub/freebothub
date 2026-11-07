@@ -211,3 +211,19 @@ Also check `https://freebothub.com` loads over HTTPS on your phone — Muse's br
   left a dead gap at the right edge (the hamburger looked like it was floating
   in the middle). The search button now gets `margin-left: auto` under 980px,
   so the buttons sit flush against the right edge.
+
+## v3.4 license key scratch card (2026-11-08)
+
+- New `license_key` column on the `bots` table (see `setup.sql`).
+- Bot detail page: when a bot has a license key, a scratch card appears under
+  the Get Bot buttons. The visitor scratches the silver panel (touch or mouse)
+  to reveal the key; once ~45% is scratched the panel clears and the
+  **Copy License Key** button enables and copies the key to the clipboard.
+  Bots without a key show no card at all.
+- Admin panel: the Add/Edit bot form has a "License Key / Password (optional)"
+  field, and the bots table shows a 🔑 next to bots that have a key.
+- One-time setup for the LIVE database (the column does not exist there yet):
+  run this once in Supabase → SQL Editor:
+  `ALTER TABLE public.bots ADD COLUMN IF NOT EXISTS license_key text;`
+  Until that runs, the card stays hidden and an admin save that includes a key
+  shows a message with that exact SQL instead of a bare error.

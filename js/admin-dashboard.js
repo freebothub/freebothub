@@ -169,7 +169,7 @@
         : `<div style="width:50px;height:32px;background:var(--bg-elevated);border-radius:4px;display:grid;place-items:center;font-size:18px">${fbh.categoryIcon(b.category)}</div>`;
       return `<tr>
         <td>${img}</td>
-        <td><strong>${fbh.escapeHtml(b.name)}</strong><br><span style="color:var(--text-muted);font-size:11px">/${fbh.escapeHtml(b.slug)}</span></td>
+        <td><strong>${fbh.escapeHtml(b.name)}</strong>${b.license_key ? ' <span title="Has a license key">🔑</span>' : ''}<br><span style="color:var(--text-muted);font-size:11px">/${fbh.escapeHtml(b.slug)}</span></td>
         <td>${fbh.escapeHtml(fbh.categoryName(b.category))}</td>
         <td style="font-size:12px">${fbh.escapeHtml(b.platform || '—')}</td>
         <td><span class="status-pill ${b.status}">${b.status}</span></td>
@@ -224,6 +224,7 @@
     document.getElementById('f_features').value = b.features || '';
     document.getElementById('f_install').value = b.installation_info || '';
     document.getElementById('f_url').value = b.destination_url || '';
+    document.getElementById('f_license').value = b.license_key || '';
     document.getElementById('f_featured').checked = !!b.is_featured;
     document.getElementById('f_status').value = b.status || 'draft';
     if (b.image_url) {
@@ -267,6 +268,7 @@
     const features = document.getElementById('f_features').value.trim();
     const installation_info = document.getElementById('f_install').value.trim();
     const destination_url = document.getElementById('f_url').value.trim();
+    const license_key = document.getElementById('f_license').value.trim();
     const is_featured = document.getElementById('f_featured').checked;
     const status = document.getElementById('f_status').value;
 
@@ -295,19 +297,24 @@
       name, category, platform, short_description,
       full_description, features, installation_info,
       image_url: imageUrl, destination_url,
+      license_key: license_key || null,
       is_featured, status,
       updated_at: new Date().toISOString()
     };
+    // If the live database predates v3.4, the license_key column does not
+    // exist yet — Supabase rejects the save. Tell the admin the exact fix
+    // instead of a bare error.
+    const missingKeyHint = ' The license_key column is missing — run this once in Supabase SQL Editor: ALTER TABLE public.bots ADD COLUMN IF NOT EXISTS license_key text;';
 
     if (id) {
       // Update existing — keep slug
       const { error } = await fbh.supabase.from('bots').update(payload).eq('id', id);
-      if (error) { fbh.toast('Update failed: ' + error.message, 'error'); btn.disabled = false; btn.textContent = '💾 Save Bot'; return; }
+      if (error) { fbh.toast('Update failed: ' + error.message + (/license_key/i.test(error.message || '') ? missingKeyHint : ''), 'error'); btn.disabled = false; btn.textContent = '💾 Save Bot'; return; }
       fbh.toast('Bot updated successfully', 'success');
     } else {
       payload.slug = slug;
       const { error } = await fbh.supabase.from('bots').insert(payload);
-      if (error) { fbh.toast('Insert failed: ' + error.message, 'error'); btn.disabled = false; btn.textContent = '💾 Save Bot'; return; }
+      if (error) { fbh.toast('Insert failed: ' + error.message + (/license_key/i.test(error.message || '') ? missingKeyHint : ''), 'error'); btn.disabled = false; btn.textContent = '💾 Save Bot'; return; }
       fbh.toast('Bot added successfully', 'success');
     }
 
