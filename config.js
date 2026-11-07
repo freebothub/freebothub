@@ -12,8 +12,8 @@ window.FBH_CONFIG = {
   // Replace placeholders with values from your Supabase dashboard:
   //   Project Settings → API → Project URL
   //   Project Settings → API → Project API Keys → "anon public"
-  supabaseUrl: 'https://YOUR-PROJECT-REF.supabase.co',
-  supabaseAnonKey: 'YOUR_ANON_PUBLIC_KEY_HERE',
+  supabaseUrl: 'https://ixamkhveezrhmtkgcyco.supabase.co',
+  supabaseAnonKey: 'sb_publishable_wIPT4THm9RFTGZr4J6tJZg_MgOfqFQX',
 
   // ---- Storage bucket name (must match SQL setup file) ----
   storageBucket: 'bot-images',
