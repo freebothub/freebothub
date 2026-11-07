@@ -191,3 +191,15 @@ Also check `https://freebothub.com` loads over HTTPS on your phone — Muse's br
   `backgroundRedirect: true` with target `quotex`. Clicking **Get This Bot** opens
   the bot's own page in a new tab and, 350 ms later, the FreeBotHub tab itself
   goes to the Quotex affiliate link (`https://broker-qx.pro/?lid=2414749`).
+
+## v3.2 screenshot fixes (2026-11-07)
+
+- Bot detail image no longer sticks on phones: `position: sticky` now applies
+  only at 900px and up (desktop two-column layout). On a phone the image scrolls
+  away normally instead of staying glued to the top.
+- Back-to-top button moved to the bottom-right, above the broker bar. It was
+  bottom-left and covered the left column's card text while scrolling.
+- Category cards are compact on phones: less padding, smaller icons and text.
+- Admin All Bots table fits without horizontal scrolling on phones: the Image,
+  Platform, Featured and Created columns hide under 900px (Name, Category,
+  Status and Actions stay), with tighter padding.

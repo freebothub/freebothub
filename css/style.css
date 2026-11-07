@@ -656,8 +656,8 @@ main { flex: 1 0 auto; }
 }
 .cat-card:hover::before { opacity: 1; }
 .cat-card .cat-icon {
-  font-size: 30px;
-  margin-bottom: var(--sp-3);
+  font-size: 26px;
+  margin-bottom: var(--sp-2);
   display: block;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
 }
@@ -753,6 +753,7 @@ main { flex: 1 0 auto; }
 }
 .bot-card-cat {
   font-size: 10px;
+  line-height: 1.2;
   color: var(--accent);
   font-weight: 700;
   text-transform: uppercase;
@@ -875,9 +876,13 @@ main { flex: 1 0 auto; }
   border: 1px solid var(--border);
   border-radius: var(--r-xl);
   overflow: hidden;
-  position: sticky;
-  top: calc(var(--nav-h) + 16px);
   align-self: start;
+}
+@media (min-width: 900px) {
+  .bot-detail-img {
+    position: sticky;
+    top: calc(var(--nav-h) + 16px);
+  }
 }
 .bot-detail-img img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .bot-detail-img .placeholder {
@@ -1130,7 +1135,7 @@ main { flex: 1 0 auto; }
 /* ============================== BACK TO TOP ============================== */
 .back-to-top {
   position: fixed;
-  left: 16px;
+  right: 16px;
   bottom: 16px;
   z-index: 940;
   width: 44px; height: 44px;
@@ -1580,8 +1585,10 @@ main { flex: 1 0 auto; }
 @media (max-width: 480px) {
   .container { padding: 0 var(--sp-3); }
   .cat-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
-  .cat-card { padding: var(--sp-4) var(--sp-3); }
-  .cat-card .cat-icon { font-size: 26px; }
+  .cat-card { padding: var(--sp-3) var(--sp-2); }
+  .cat-card .cat-icon { font-size: 22px; margin-bottom: 6px; }
+  .cat-card .cat-name { font-size: 13px; }
+  .cat-card .cat-count { font-size: 10px; }
   .bot-detail-section { padding: var(--sp-4); }
   .meta-pill { font-size: 11px; padding: 5px 10px; }
   .btn { padding: 10px 16px; font-size: var(--fs-sm); }
@@ -1716,7 +1723,8 @@ html { scroll-padding-top: calc(var(--nav-h) + 12px); }
 body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
 .back-to-top {
   bottom: calc(88px + env(safe-area-inset-bottom, 0px));
-  left: calc(16px + env(safe-area-inset-left, 0px));
+  left: auto;
+  right: calc(16px + env(safe-area-inset-right, 0px));
 }
 .toast { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
 .nav-drawer { padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -1726,3 +1734,26 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
 .bot-card-img img { aspect-ratio: 16 / 9; }
 .section-head .view-all { min-height: 44px; }
 .footer { padding-bottom: calc(var(--sp-6) + env(safe-area-inset-bottom, 0px)); }
+
+/* ==========================================================================
+   v3.2 fixes (2026-11-07, from phone screenshots)
+   1. Bot detail image is sticky only on desktop — on phones it used to stay
+      glued to the top while scrolling the description.
+   2. Back-to-top moved to the bottom-right above the broker bar — it was
+      bottom-left, covering the left column's card text.
+   3. Category cards are compact on phones (less padding, smaller icon).
+   4. Admin table fits without horizontal scrolling: secondary columns hide
+      on small screens and the table shrinks to the screen width.
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .table-wrap .admin-table { min-width: 0; }
+  .admin-table th, .admin-table td { padding: 8px 10px; font-size: 13px; }
+  .admin-table th:nth-child(1), .admin-table td:nth-child(1),  /* Image */
+  .admin-table th:nth-child(4), .admin-table td:nth-child(4),  /* Platform */
+  .admin-table th:nth-child(6), .admin-table td:nth-child(6),  /* Featured */
+  .admin-table th:nth-child(7), .admin-table td:nth-child(7) { /* Created */
+    display: none;
+  }
+  .admin-table .btn-sm { padding: 6px 10px; min-height: 36px; }
+}
