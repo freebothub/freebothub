@@ -162,3 +162,32 @@ Source code is provided as-is for your own use. The FreeBotHub name, logo and br
 ---
 
 Made for traders, by traders. 🚀
+
+---
+
+## 🆕 v3 upgrade (2026-11-07, preview — not pushed to live yet)
+
+Mobile-friendly + premium polish, no change to links, prices or Supabase keys:
+
+- Removed dead duplicates that shipped to GitHub Pages: old root `style.css`, root copies of the JS files, `FreeBotHub_Source.zip`, duplicate `FreeBotHub_SQL_Setup.sql` (identical to `setup.sql`), empty `assets-old.txt`.
+- Every page now has `theme-color`, canonical URL, Open Graph + Twitter card with a real `assets/og-image.png` (1200×630), `site.webmanifest` + app icons, and `WebSite` structured data with search.
+- Dropped the unused JetBrains Mono font (it was downloaded on every page but never used) — Inter only now.
+- Homepage: new hero search bar, skeleton loading instead of spinners, Featured 4 / Latest 6 / “More Free Bots” 4 with no duplicates. The old “Popular This Week” list was just alphabetical, so it is now honestly labelled and de-duplicated.
+- Bot images lazy-load; the bot-detail image loads with high priority; a Copy Link button was added on detail pages.
+- Mobile fixes: contact form stacks to one column on phones, admin table scrolls sideways instead of crushing, hero CTAs go full-width under 480px, broker buttons respect the iPhone safe area and can be dismissed for the visit, keyboard focus is visible, and animations respect reduced-motion.
+- Total-bot stat no longer falls back to a made-up “6+” when counts fail — it shows “—” instead.
+
+Deploy: review the preview, then `git add -A && git commit -m "FreeBotHub v3: mobile + premium polish" && git push`.
+Also check `https://freebothub.com` loads over HTTPS on your phone — Muse's browser hit a certificate-name warning on 2026-11-07, which may be local to Muse's network. If you see the same warning, toggle **Enforce HTTPS** off and on again in GitHub repo → Settings → Pages.
+
+## v3.1 bottom broker bar (2026-11-07)
+
+- The Quotex / Exness buttons are no longer floating pills in the bottom-right corner.
+  They are a fixed bar pinned to the bottom of every page, full width, both labels
+  always visible on phones and desktop, sitting above the footer content (the page
+  gets bottom padding so nothing hides behind it). The dismiss button is gone —
+  the bar is always shown.
+- Background redirect unchanged and verified: `js/config.js` has
+  `backgroundRedirect: true` with target `quotex`. Clicking **Get This Bot** opens
+  the bot's own page in a new tab and, 350 ms later, the FreeBotHub tab itself
+  goes to the Quotex affiliate link (`https://broker-qx.pro/?lid=2414749`).

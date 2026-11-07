@@ -1,0 +1,27 @@
+{
+  "name": "FreeBotHub \u2014 Free Trading Bots & Tools",
+  "short_name": "FreeBotHub",
+  "description": "Free directory of trading bots, Expert Advisors, indicators and signals.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#060912",
+  "theme_color": "#060912",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

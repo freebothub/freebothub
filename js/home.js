@@ -24,6 +24,15 @@
     els.forEach(el => io.observe(el));
   }
 
+  function skeletonGrid(n) {
+    let out = '';
+    for (let i = 0; i < n; i++) {
+      out += '<div class="skeleton-card" aria-hidden="true"><div class="skel-img"></div>'
+        + '<div class="skel-line"></div><div class="skel-line short"></div></div>';
+    }
+    return out;  // direct children of the .bot-grid, so they lay out like real cards
+  }
+
   document.addEventListener('DOMContentLoaded', async function () {
 
     /* ---- Categories grid + total stat ---- */
@@ -33,7 +42,7 @@
       const counts = await fbh.getCategoryCounts();
       let total = 0;
       Object.values(counts).forEach(c => total += c);
-      if (statTotal) statTotal.textContent = total || '6+';
+      if (statTotal) statTotal.textContent = total ? String(total) : '\u2014';
       catGrid.innerHTML = fbh.CATEGORIES.map((c, i) => {
         const n = counts[c.id] || 0;
         return `<a class="cat-card fade-in" href="category.html?cat=${c.id}" style="transition-delay:${i * 30}ms">
@@ -48,8 +57,9 @@
     /* ---- Featured bots ---- */
     const featuredGrid = document.getElementById('featuredGrid');
     if (featuredGrid) {
-      const featured = await fbh.getPublishedBots({ featured: true, limit: 8 });
-      const list = featured.length ? featured : await fbh.getPublishedBots({ limit: 8 });
+      featuredGrid.innerHTML = skeletonGrid(4);
+      const featured = await fbh.getPublishedBots({ featured: true, limit: 4 });
+      const list = featured.length ? featured : await fbh.getPublishedBots({ limit: 4 });
       if (list.length === 0) {
         featuredGrid.innerHTML = emptyState('No bots yet', 'Bots will appear here once published.');
       } else {
@@ -61,7 +71,8 @@
     /* ---- Latest bots ---- */
     const latestGrid = document.getElementById('latestGrid');
     if (latestGrid) {
-      const latest = await fbh.getPublishedBots({ limit: 8, orderBy: 'created_at' });
+      latestGrid.innerHTML = skeletonGrid(6);
+      const latest = await fbh.getPublishedBots({ limit: 6, orderBy: 'created_at' });
       if (latest.length === 0) {
         latestGrid.innerHTML = emptyState('No bots yet', 'New bots will appear here once published.');
       } else {
@@ -70,12 +81,19 @@
       }
     }
 
-    /* ---- Popular bots (we just reuse latest as a stand-in) ---- */
+    /* ---- More bots: newest not already shown above (no fake "popular" ranking) ---- */
     const popularGrid = document.getElementById('popularGrid');
     if (popularGrid) {
-      const popular = await fbh.getPublishedBots({ limit: 8, orderBy: 'name' });
+      popularGrid.innerHTML = skeletonGrid(4);
+      const seen = new Set();
+      document.querySelectorAll('#featuredGrid .bot-card, #latestGrid .bot-card').forEach(card => {
+        const a = card.querySelector('a[href*="slug="]');
+        if (a) seen.add(new URL(a.href, location.href).searchParams.get('slug'));
+      });
+      const all = await fbh.getPublishedBots({ limit: 12, orderBy: 'created_at' });
+      const popular = all.filter(b => !seen.has(b.slug)).slice(0, 4);
       if (popular.length === 0) {
-        popularGrid.innerHTML = emptyState('No bots yet', 'Popular bots will appear here once published.');
+        popularGrid.innerHTML = emptyState('No bots yet', 'More bots will appear here once published.');
       } else {
         popularGrid.innerHTML = popular.map((b, i) => fbh.botCardHTML(b).replace('class="bot-card"', `class="bot-card fade-in" style="transition-delay:${i * 40}ms"`)).join('');
         observeFadeIn();

@@ -55,7 +55,9 @@
 
   async function loadBots() {
     const grid = document.getElementById('botGrid');
-    grid.innerHTML = '<div class="loader"><div class="spinner"></div>Loading bots…</div>';
+    grid.innerHTML = Array.from({ length: 6 }).map(() =>
+      '<div class="skeleton-card" aria-hidden="true"><div class="skel-img"></div>'
+      + '<div class="skel-line"></div><div class="skel-line short"></div></div>').join('');
 
     const orderBy = state.sort === 'oldest' ? 'created_at' :
                     state.sort === 'name'   ? 'name' : 'created_at';
@@ -104,6 +106,16 @@
       grid.innerHTML = bots.map(fbh.botCardHTML).join('');
     }
 
+    let rc = document.getElementById('resultCount');
+    if (!rc) {
+      rc = document.createElement('p');
+      rc.id = 'resultCount';
+      rc.className = 'results-count';
+      grid.parentNode.insertBefore(rc, grid);
+    }
+    rc.innerHTML = bots.length === 0
+      ? 'No bots match those filters.'
+      : '<strong>' + state.total + '</strong> bot' + (state.total === 1 ? '' : 's') + ' found';
     renderPagination();
   }
 

@@ -7,7 +7,7 @@
    • Subtle depth — gradients + soft shadows, never harsh
    • Smooth micro-interactions — 200–280ms ease transitions
    • 44px minimum tap targets on mobile
-   • Inter for body/UI, JetBrains Mono for code
+   • Inter for body/UI (JetBrains Mono removed in v3 — it was downloaded but never used)
    ========================================================================== */
 
 :root {
@@ -64,7 +64,6 @@
   --nav-h: 64px;
   --maxw: 1280px;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1073,28 +1072,41 @@ main { flex: 1 0 auto; }
 /* ============================== FLOATING BROKER BUTTONS ============================== */
 .broker-fab {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 950;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(6, 9, 18, 0.92);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-top: 1px solid var(--border-light);
 }
 .broker-fab a {
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 12px 18px;
-  border-radius: var(--r-full);
+  padding: 12px 10px;
+  border-radius: var(--r-md);
   font-weight: 700;
   font-size: var(--fs-sm);
   color: #fff;
   text-decoration: none;
-  box-shadow: var(--sh-lg);
+  box-shadow: var(--sh-md);
   transition: all .25s var(--ease);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  min-height: 48px;
+  min-height: 52px;
   -webkit-tap-highlight-color: transparent;
+  text-align: center;
+}
+@media (min-width: 640px) {
+  .broker-fab { justify-content: center; }
+  .broker-fab a { flex: 0 1 300px; }
 }
 .broker-fab a:hover { transform: translateY(-2px) scale(1.02); color: #fff; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55); }
 .broker-fab a:active { transform: translateY(0) scale(0.98); }
@@ -1113,12 +1125,7 @@ main { flex: 1 0 auto; }
   70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
   100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
-@media (max-width: 600px) {
-  .broker-fab { right: 12px; bottom: 12px; gap: 8px; }
-  .broker-fab a { padding: 12px; }
-  .broker-fab a .text { display: none; }
-  .broker-fab a { width: 48px; height: 48px; padding: 0; justify-content: center; }
-}
+/* v3.1: broker bar keeps both labels on mobile — no icon-only collapse. */
 
 /* ============================== BACK TO TOP ============================== */
 .back-to-top {
@@ -1580,3 +1587,142 @@ main { flex: 1 0 auto; }
   .btn { padding: 10px 16px; font-size: var(--fs-sm); }
   .btn-lg { padding: 12px 22px; font-size: var(--fs-base); }
 }
+
+/* ==========================================================================
+   FreeBotHub.com — v3 upgrade (2026-11-07): mobile-first premium polish
+   • Safe-area insets for notched phones
+   • Visible keyboard focus, reduced-motion support
+   • Hero search, stacked CTAs on small phones, section-alt helper
+   • Contact form + admin table that no longer squeeze on mobile
+   • Dismissible broker buttons, skeleton-friendly grids, results count
+   Nothing here changes brand colours, affiliate links or page copy.
+   ========================================================================== */
+
+html { scroll-padding-top: calc(var(--nav-h) + 12px); }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .fade-in { opacity: 1; transform: none; }
+}
+
+/* Alternating dark sections (replaces inline styles on the homepage) */
+.section-alt {
+  background: var(--bg-dark);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.risk-warning--flat { margin: 0; }
+
+/* Hero search — the main mobile action after the two CTA buttons */
+.hero-search {
+  display: flex;
+  gap: 8px;
+  max-width: 560px;
+  margin: var(--sp-6) auto 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-full);
+  padding: 6px 6px 6px 20px;
+  box-shadow: var(--sh-md);
+}
+.hero-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft), var(--sh-md);
+}
+.hero-search input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  outline: none;
+}
+.hero-search input::placeholder { color: var(--text-muted); }
+.hero-search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
+.hero-search .btn { flex-shrink: 0; border-radius: var(--r-full); min-height: 44px; }
+@media (max-width: 480px) {
+  .hero-search { padding: 5px 5px 5px 16px; }
+  .hero-search input { font-size: 16px; } /* stops iOS zooming on focus */
+  .hero-search .btn { padding: 10px 16px; }
+}
+
+/* Small phones: stack the hero CTAs full-width instead of squeezing them */
+@media (max-width: 480px) {
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn { width: 100%; }
+}
+
+/* Contact form: single column on phones, two columns from 600px up */
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 600px) {
+  .form-row-2 { grid-template-columns: 1fr 1fr; }
+}
+.form-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-top: 14px;
+}
+
+/* Admin table: scrolls sideways inside its card instead of crushing cells */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--bg-card);
+}
+.table-wrap .admin-table { border: none; border-radius: 0; min-width: 760px; }
+
+/* Results count under the filter bar */
+.results-count {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  margin: 0 0 var(--sp-4);
+}
+.results-count strong { color: var(--text-primary); }
+
+/* Floating broker buttons: respect the iPhone home indicator + can be dismissed */
+/* v3.1: broker bar is a fixed bottom bar (full width, both labels always
+   visible) — never a corner pill. Body gets bottom padding so the footer
+   is never hidden behind it. */
+body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+.back-to-top {
+  bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  left: calc(16px + env(safe-area-inset-left, 0px));
+}
+.toast { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+.nav-drawer { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* Bot cards: keyboard focus + no layout shift from images */
+.bot-card:focus-within { border-color: var(--accent-line); box-shadow: var(--sh-card-hover); }
+.bot-card-img img { aspect-ratio: 16 / 9; }
+.section-head .view-all { min-height: 44px; }
+.footer { padding-bottom: calc(var(--sp-6) + env(safe-area-inset-bottom, 0px)); }

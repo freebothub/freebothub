@@ -37,7 +37,7 @@
 
     // Build markup
     const imgPart = bot.image_url
-      ? `<img src="${fbh.escapeHtml(bot.image_url)}" alt="${fbh.escapeHtml(bot.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+      ? `<img src="${fbh.escapeHtml(bot.image_url)}" alt="${fbh.escapeHtml(bot.name)}" fetchpriority="high" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
          <div class="placeholder" style="display:none">${fbh.categoryIcon(bot.category)}</div>`
       : `<div class="placeholder">${fbh.categoryIcon(bot.category)}</div>`;
 
@@ -90,6 +90,7 @@
 
           <div class="detail-cta">
             <button class="btn btn-primary btn-lg" id="getBotBtn">🚀 Get This Bot (Free)</button>
+            <button class="btn btn-outline btn-lg" id="copyLinkBtn" type="button">🔗 Copy Link</button>
             <a class="btn btn-outline btn-lg" href="category.html?cat=${encodeURIComponent(bot.category)}">More ${fbh.escapeHtml(fbh.categoryName(bot.category))} bots →</a>
           </div>
 
@@ -104,6 +105,26 @@
     btn.addEventListener('click', function () {
       fbh.openBotLink(bot.destination_url, { source: 'detail' });
     });
+    const copyBtn = document.getElementById('copyLinkBtn');
+    if (copyBtn) copyBtn.addEventListener('click', async function () {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        fbh.toast('Link copied', 'success');
+      } catch (e) {
+        fbh.toast('Copy failed — long-press the address bar to copy', 'error');
+      }
+    });
+    // Honest structured data for this bot (free offer, no ratings invented)
+    const ld = document.createElement('script');
+    ld.type = 'application/ld+json';
+    ld.textContent = JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'SoftwareApplication',
+      name: bot.name, applicationCategory: 'FinanceApplication',
+      operatingSystem: bot.platform || 'Web',
+      description: bot.short_description || bot.name,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+    });
+    document.head.appendChild(ld);
   });
 
   function renderMissing(root, title, msg) {

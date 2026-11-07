@@ -2,7 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#060912">
+<link rel="canonical" href="https://freebothub.com/">
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<meta property="og:image" content="https://freebothub.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="FreeBotHub — Free Trading Bots & Tools">
+<meta property="og:url" content="https://freebothub.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FreeBotHub.com — Free Trading Bots & Tools Directory">
+<meta name="twitter:image" content="https://freebothub.com/assets/og-image.png">
+<link rel="preconnect" href="https://ixamkhveezrhmtkgcyco.supabase.co">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+
 <title>FreeBotHub.com — Free Trading Bots & Tools Directory</title>
 <meta name="description" content="Free directory of trading bots, Expert Advisors, indicators and signals. Forex, Binary, Crypto, TradingView, AI Trading, MT4, MT5 and more — all free.">
 <meta name="keywords" content="free trading bots, forex bots, binary options bots, crypto trading bots, MT4 EA, MT5 EA, TradingView indicators, AI trading bots, trading signals">
@@ -12,9 +28,10 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script>window.FBH_PAGE_NAV = 'home';</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"FreeBotHub","url":"https://freebothub.com/","description":"Free directory of trading bots, Expert Advisors, indicators and signals.","potentialAction":{"@type":"SearchAction","target":"https://freebothub.com/bots.html?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
 </head>
 <body>
 <div id="navbar"></div>
@@ -30,6 +47,11 @@
         <a href="bots.html" class="btn btn-primary btn-lg">Browse All Bots</a>
         <a href="category.html?cat=forex" class="btn btn-outline btn-lg">Explore Categories</a>
       </div>
+      <form class="hero-search" role="search" action="bots.html" method="get">
+        <label class="visually-hidden" for="heroSearch">Search free trading bots</label>
+        <input id="heroSearch" name="q" type="search" placeholder="Search bots — try “MT5”, “gold” or “scalping”…" autocomplete="off">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </form>
       <div class="hero-stats">
         <div class="hero-stat"><div class="num" id="statTotal">—</div><div class="label">Total Bots</div></div>
         <div class="hero-stat"><div class="num" id="statCats">9</div><div class="label">Categories</div></div>
@@ -52,7 +74,7 @@
   </section>
 
   <!-- FEATURED -->
-  <section class="section" style="background: var(--bg-dark); border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+  <section class="section section-alt">
     <div class="container">
       <div class="section-head">
         <h2>Featured Trading Bots</h2>
@@ -74,10 +96,10 @@
   </section>
 
   <!-- POPULAR (sample) -->
-  <section class="section" style="background: var(--bg-dark); border-top:1px solid var(--border)">
+  <section class="section section-alt">
     <div class="container">
       <div class="section-head">
-        <h2>Popular This Week</h2>
+        <h2>More Free Bots</h2>
         <a class="view-all" href="bots.html">View all →</a>
       </div>
       <div class="bot-grid" id="popularGrid"><div class="loader"><div class="spinner"></div>Loading popular bots…</div></div>
@@ -87,7 +109,7 @@
   <!-- DISCLAIMER -->
   <section class="section-sm">
     <div class="container">
-      <div class="risk-warning" style="margin:0">
+      <div class="risk-warning risk-warning--flat">
         <h3>⚠️ Trading Risk Warning</h3>
         <p>Trading foreign exchange, binary options, cryptocurrencies and other leveraged products carries a high level of risk and may not be suitable for all investors. You could lose some or all of your invested capital. The bots and tools listed on FreeBotHub are provided for informational purposes only and do not constitute financial advice. <strong>No bot guarantees profits.</strong> Always test on demo accounts and seek independent advice before trading with real funds.</p>
       </div>
