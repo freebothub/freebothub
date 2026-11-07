@@ -6,6 +6,24 @@
   const fbh = window.fbh;
   if (!fbh) return;
 
+  /* IntersectionObserver-based fade-in (premium scroll animation) */
+  function observeFadeIn() {
+    const els = document.querySelectorAll('.fade-in:not(.visible)');
+    if (!('IntersectionObserver' in window) || !els.length) {
+      els.forEach(el => el.classList.add('visible'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 40);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(el => io.observe(el));
+  }
+
   document.addEventListener('DOMContentLoaded', async function () {
 
     /* ---- Categories grid + total stat ---- */
@@ -16,14 +34,15 @@
       let total = 0;
       Object.values(counts).forEach(c => total += c);
       if (statTotal) statTotal.textContent = total || '6+';
-      catGrid.innerHTML = fbh.CATEGORIES.map(c => {
+      catGrid.innerHTML = fbh.CATEGORIES.map((c, i) => {
         const n = counts[c.id] || 0;
-        return `<a class="cat-card" href="category.html?cat=${c.id}">
+        return `<a class="cat-card fade-in" href="category.html?cat=${c.id}" style="transition-delay:${i * 30}ms">
           <div class="cat-icon">${c.icon}</div>
           <div class="cat-name">${c.name}</div>
           <div class="cat-count">${n} bot${n === 1 ? '' : 's'}</div>
         </a>`;
       }).join('');
+      observeFadeIn();
     }
 
     /* ---- Featured bots ---- */
@@ -34,7 +53,8 @@
       if (list.length === 0) {
         featuredGrid.innerHTML = emptyState('No bots yet', 'Bots will appear here once published.');
       } else {
-        featuredGrid.innerHTML = list.map(fbh.botCardHTML).join('');
+        featuredGrid.innerHTML = list.map((b, i) => fbh.botCardHTML(b).replace('class="bot-card"', `class="bot-card fade-in" style="transition-delay:${i * 40}ms"`)).join('');
+        observeFadeIn();
       }
     }
 
@@ -45,7 +65,8 @@
       if (latest.length === 0) {
         latestGrid.innerHTML = emptyState('No bots yet', 'New bots will appear here once published.');
       } else {
-        latestGrid.innerHTML = latest.map(fbh.botCardHTML).join('');
+        latestGrid.innerHTML = latest.map((b, i) => fbh.botCardHTML(b).replace('class="bot-card"', `class="bot-card fade-in" style="transition-delay:${i * 40}ms"`)).join('');
+        observeFadeIn();
       }
     }
 
@@ -56,7 +77,8 @@
       if (popular.length === 0) {
         popularGrid.innerHTML = emptyState('No bots yet', 'Popular bots will appear here once published.');
       } else {
-        popularGrid.innerHTML = popular.map(fbh.botCardHTML).join('');
+        popularGrid.innerHTML = popular.map((b, i) => fbh.botCardHTML(b).replace('class="bot-card"', `class="bot-card fade-in" style="transition-delay:${i * 40}ms"`)).join('');
+        observeFadeIn();
       }
     }
 
